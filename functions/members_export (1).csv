@@ -1,0 +1,6 @@
+id,mem_id,firstname,middlename,lastname,extension,dob,age,pob,civil_status,tin,mobile_number,email,address,brgy,municipality,province,image_path,status
+1,202311245444,"Gyle Patrick",Akinlay,Lukinhay,N/A,2000-10-15,23,"Capitan Bayong",Single,12132312312312,639975613995,gylepmsd@sdfsdfdsfdnn,3,"Capitan Bayong",Impasugong,Bukidnon,uploads/656076d799c5c.png,active
+2,202311306999,"Eldora Claire ",Gamana,Jamero,N/A,2001-10-05,22,"San Luis, Malitbog, Bukidnon",Single,77567898345,09677203202,20201152@nbsc.edu.ph,3A,Crossing,Libona,Bukidnon,uploads/656852aa0a77e.jpg,active
+3,202311308141,"Jessa ",Lahayon,Padayhag,N/A,1998-12-12,24,"Camp Phillips, Manolo Fortich, Bukidnon",Single,77654398234,09310423825,20201148@nbsc.edu.ph,2,Lingi-on,"Manolo Fortich",Bukidnon,uploads/6568d39d0e9fc.jpg,active
+4,202311309036,"Jilyn Mae",Umapas,Talugco,N/A,2001-06-22,22,"Malaybalay City",Single,65464567,09876543781,talugcojilyn@gmail.com,1,Kisolon,Sumilao,Bukidnon,uploads/6568f11931eff.png,active
+5,202312017948,Marchilyn,A,Abunda,N/A,2000-03-07,23,"Manolo Fortich, Bukidnon",Married,987654321234,639767765676,marchilyn@gmail.com,4,Tankulan,"Manolo Fortich",Bukidnon,uploads/65699ec0b5df0.png,active
