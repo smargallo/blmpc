@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_POST['user_id'];
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = $randomPassword;
+    $password = (isset($_POST['password'])) ? $_POST['password'] : $randomPassword;
     $type = "admin";
 
     if (empty($email) || empty($username) || empty($password)) {

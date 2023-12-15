@@ -25,13 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = $randomPassword;
+    $password = (isset($_POST['password'])) ? $_POST['password'] : $randomPassword;
     $type = "admin";
 
     if (empty($email) || empty($username) || empty($password)) {
         $_SESSION['error'] = "Please fill in all required fields.";
     } else {
-        $emailCheckQuery = "SELECT COUNT(*) AS email_count FROM users WHERE email_address = '$email'";
+        $emailCheckQuery    = "SELECT COUNT(*) AS email_count FROM users WHERE email_address = '$email'";
         $usernameCheckQuery = "SELECT COUNT(*) AS username_count FROM users WHERE username = '$username'";
         $emailResult = $conn->query($emailCheckQuery);
         $usernameResult = $conn->query($usernameCheckQuery);

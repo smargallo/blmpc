@@ -51,12 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $calendarId = 'padayhagjessa@gmail.com';
 
                     // Embedding an image in the event description
-                    $imageUrl = 'https://iili.io/Ju3TvPs.md.jpg'; // Replace with the actual URL of your image
+                     
                     $eventDescriptionWithImage = '<p><strong>' . $event_name . '</strong></p>
                     <p>' . $event_description . '</p>
                     <p>Event Time: ' . $event_date . '</p>' .
-                    '<p>Event Calendar Link: ' . $calendarLink . '</p>
-                    <p><img src="' . $imageUrl . '" alt="Event Image"></p>';
+                    '<p>Event Calendar Link: ' . $calendarLink . '</p>';
 
                     $event = new Google\Service\Calendar\Event(array(
                         'summary' => $event_name,
@@ -73,6 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $event = $service->events->insert($calendarId, $event);
 
+                    $img = "http://blmpccoop.test/functions/" . $imageFile;
+
+                    $imgURL = uploadImageToImgBB("91bf04e31fbba83f6fe41f819d1d345f", $img);
+
                     if ($event) {
                         // Event added to Google Calendar, now insert into the database
                         $sql = "INSERT INTO events_tbl(event_name, event_date, event_description, image_path, google_calendar_link) VALUES('$event_name', '$event_date', '$event_description', '$imageFile', '$event->htmlLink')";
@@ -81,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             // Database insertion successful
 
                             // Notify users by email
-                            notifyUsersByEmail($event_name, $event_description, $event->start->dateTime, $event->htmlLink);
+                            notifyUsersByEmail($event_name, $event_description, $event->start->dateTime, $event->htmlLink, $imgURL);
 
                             $_SESSION['success'] = "Event added to Google Calendar and database.";
                         } else {
@@ -103,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 // Function to send email notifications
-function notifyUsersByEmail($eventTitle, $eventDescription, $eventDateTime, $calendarLink)
+function notifyUsersByEmail($eventTitle, $eventDescription, $eventDateTime, $calendarLink, $imgURL)
 {
     include 'connection.php';
 
@@ -121,11 +124,9 @@ function notifyUsersByEmail($eventTitle, $eventDescription, $eventDateTime, $cal
 
         // Recipients (replace with actual user emails)
         $dateCheckQuery = "SELECT email FROM members_tbl WHERE 1";
-        $dateResult = $conn->query($dateCheckQuery);
+        $dateResult = $conn->query($dateCheckQuery); 
 
-                // Recipients (replace with actual user emails)
-        $dateCheckQuery = "SELECT email FROM members_tbl WHERE 1";
-        $dateResult = $conn->query($dateCheckQuery);
+
 
         // Loop through database results if applicable
         while ($row = $dateResult->fetch_assoc()) {
@@ -138,15 +139,19 @@ function notifyUsersByEmail($eventTitle, $eventDescription, $eventDateTime, $cal
             $mail->setFrom('info@blmpccoop.com', 'BLMPC COOP');
             $mail->isHTML(true);
             $mail->Subject = 'New Event: ' . $eventTitle;
-            $mail->Body    = '<p><strong>' . $eventTitle . '</strong></p>
-            <p>' . $eventDescription . '</p>
-            <p>Event Time: ' . $eventDateTime . '</p>'.
-            '<p>Event Calendar Link: ' . $calendarLink . '</p>';
+
+             
+
+            // Embed the image in the email body
+            $mail->Body    = '<p><strong>' . $eventTitle . '</strong></p>';
+            $mail->Body    .= '<p>' . $eventDescription . '</p>';
+            $mail->Body    .= '<p>Event Time: ' . $eventDateTime . '</p>'; 
+            $mail->Body    .= '<p><img src="' . $imgURL . '" alt="Event Image" /></p>'; 
 
             // Send email for the current recipient
             $mail->send();
 
-            // Clear recipient for the next iteration
+            // Clear recipient and attachments for the next iteration
             $mail->clearAddresses();
         }
 
@@ -156,25 +161,37 @@ function notifyUsersByEmail($eventTitle, $eventDescription, $eventDateTime, $cal
         echo 'Email notification failed. Error: ', $mail->ErrorInfo;
     }
 }
-  
-// Function to generate iCalendar (.ics) link
-function generateICalLink($eventTitle, $eventDateTime, $calendarLink)
-{
-    $icalData = "BEGIN:VCALENDAR
-VERSION:2.0
-CALSCALE:GREGORIAN
-BEGIN:VEVENT
-SUMMARY:$eventTitle
-DESCRIPTION:$eventTitle - $eventDateTime
-DTSTAMP:" . date('Ymd\THis\Z') . "
-DTSTART:$eventDateTime
-DTEND:$eventDateTime
-LOCATION:$calendarLink
-URL:$calendarLink
-END:VEVENT
-END:VCALENDAR";
+   
+function uploadImageToImgBB($apiKey, $imagePath) {
+    // Create a cURL handle
+    $ch = curl_init();
 
-    $icalData = urlencode($icalData);
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_URL, 'https://api.imgbb.com/1/upload?key=' . $apiKey);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
 
-    return "data:text/calendar;charset=utf8,$icalData";
+    // Add the image file to the cURL request
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
+        'image' => base64_encode(file_get_contents($imagePath)),
+    ]);
+
+    // Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Close cURL handle
+    curl_close($ch);
+
+    // Decode the JSON response
+    $data = json_decode($response, true);
+
+    // Check if the upload was successful
+    if ($data && isset($data['data']['url'])) {
+        return $data['data']['url'];
+    } else {
+        return false;
+    }
 }
+
+ 
+?>

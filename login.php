@@ -145,8 +145,7 @@
 
 
 
-                                </form>
-                                <p>Need an admin account? <a href="register.php" class="mt-3">Click here</a></p>
+                                </form> 
                             </div>
                         </div>
                     </div>

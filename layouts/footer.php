@@ -138,18 +138,18 @@
                             <p class="text-success small h5">Name</p>
                             <div class="form-group">
                                 <label for="firstname">Firstname</label>
-                                <input type="text" class="form-control" name="firstname" placeholder="Juan" required>
+                                <input id="addFirstName" oninput="capitalizeInput('addFirstName')" type="text" class="form-control" name="firstname" placeholder="Juan" required>
                             </div>
                             <div class="form-group">
                                 <label for="middlename">Middle Name</label>
-                                <input type="text" class="form-control" name="middlename" placeholder="Mendez" required>
+                                <input id="addMiddleName" oninput="capitalizeInput('addMiddleName')" type="text" class="form-control" name="middlename" placeholder="Mendez" required>
                             </div>
                             <div class="form-group">
                                 <label for="lastname">Lastname</label>
-                                <input type="text" class="form-control" name="lastname" placeholder="Dela Cruz" required>
+                                <input id="addLastName" oninput="capitalizeInput('addLastName')" type="text" class="form-control" name="lastname" placeholder="Dela Cruz" required>
                             </div>
                             <div class="form-group">
-                                <label for="extension">Suffix</label>
+                                <label for="extension">Suffix (optional)</label>
                                 <select class="form-control form-select form-select-sm" name="extension">
                                     <option value="N/A">None</option>
                                     <option value="Sr.">Sr</option>
@@ -175,7 +175,7 @@
                             <div class="form-group">
                                 <label for="pob">Place of Birth</label>
 
-                                <textarea name="pob" cols="10" rows="4" class="form-control" placeholder="Place of Birth" required></textarea>
+                                <input name="pob" cols="10" rows="4" class="form-control" placeholder="Place of Birth" required />
                             </div>
                             <div class="form-group">
                                 <label for="civil-status">Civil Status</label>
@@ -189,7 +189,7 @@
 
                             <div class="form-group">
                                 <label for="tin">TIN</label>
-                                <input type="number" class="form-control" name="tin" aria-describedby="emailHelp" placeholder="TIN number" required>
+                                <input type="number" class="form-control" name="tin" autocomplete="off" aria-describedby="emailHelp" placeholder="TIN number" required>
                             </div>
                         </div>
 
@@ -213,17 +213,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <!-- <input type="text" class="form-control" required name="province" placeholder="Province"> -->
                                 <select name="province" class="form-control" required></select>
                             </div>
                             <div class="form-group">
                                 <label for="municipality">Municipality</label>
-                                <!-- <input type="text" class="form-control" required name="municipality" placeholder="Municipality"> -->
                                 <select class="form-control" required name="municipality"></select>
                             </div>
                             <div class="form-group">
                                 <label for="brgy">Barangay</label>
-                                <!-- <input type="text" class="form-control" required name="brgy" placeholder="Barangay"> -->
                                 <select class="form-control" required name="brgy"></select>
                             </div>
                             <div class="form-group">
@@ -290,7 +287,7 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="form-group">
-                                <label for="extension">Suffix</label>
+                                <label for="extension">Suffix (optional)</label>
                                 <select class="form-control form-select form-select-sm" name="extension">
                                     <option value="N/A">None</option>
                                     <option value="Sr.">Sr</option>
@@ -353,7 +350,6 @@
 
 
 <!-- modals -->
-
 <div class="modal fade" id="viewModalAdmin<?= $row['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -409,7 +405,7 @@
 
                         <div class="form-group">
                             <label for="tin">TIN</label>
-                            <input type="text" readonly class="form-control" id="tin" name="tin" aria-describedby="emailHelp" value="<?= $row['tin'] ?>" placeholder="TIN number">
+                            <input type="text" readonly class="form-control" id="tin" name="tin" autocomplete="off" aria-describedby="emailHelp" value="<?= $row['tin'] ?>" placeholder="TIN number">
                         </div>
                     </div>
 
@@ -544,7 +540,7 @@
             jsonData = data;
 
             // Populate region dropdown
-            populateDropdown('.add_member', 'select[name=region]', Object.keys(jsonData), true);
+            populateRegionDropdown('.add_member', 'select[name=region]', jsonData, true);
 
             // Handle region change
             $('.add_member select[name="region"]').change(function() {
@@ -592,23 +588,18 @@
 
 
             var $modal = $(this).data('target');
+            var $selected_region = $(this).data('region');
 
             $.getJSON('functions/config/address.json', function(data) {
 
                 jsonData = data;
 
-                populateDropdown(false, $modal + ' select[name=region]', Object.keys(jsonData));
+                populateRegionDropdown(false, $modal + ' select[name=region]', jsonData, true, $selected_region);
 
                 // Handle region change
                 $(document).on('change', $modal + ' select[name="region"]', function() {
                     var selectedRegion = $(this).val();
-
-                    // console.log(selectedRegion);
-
                     var provinces = jsonData[selectedRegion].province_list;
-
-                    // console.log(provinces);
-
                     populateDropdown(false, $modal + ' select[name=province]', Object.keys(provinces));
                 });
 
@@ -661,6 +652,39 @@
             dropdown.append('<option value="' + value + '">' + value + '</option>');
         });
     }
+
+    // Function to populate a dropdown
+    function populateRegionDropdown(parentElement = false, dropdownElement, values, empty = false, selected_region = false) {
+        var dropdown = $(parentElement ? parentElement + ' ' + dropdownElement : dropdownElement);
+
+        if(!empty){
+            dropdown.empty();
+        }
+        
+        dropdown.append("<option value=''>Select</option>");
+
+        $.each(values, function(regionCode, regionData) {
+
+            if(selected != false){
+                var selected = selected_region.toString() === regionCode ? 'selected':'';
+                console.log( selected );
+            }else {
+                selected = false;
+            }
+
+            dropdown.append('<option '+ selected +' value="' + regionCode + '">' + regionData.region_name + '</option>');
+        });
+    }
+
+    function capitalizeInput(id) {
+        var inputElement = document.getElementById(id);
+        var words = inputElement.value.split(' ');
+        for (var i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].substring(1);
+        }
+        inputElement.value = words.join(' ');
+    }
+
 
 </script>
 </body>

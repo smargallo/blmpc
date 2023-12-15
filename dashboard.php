@@ -91,25 +91,26 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
 
                             while ($row = $resultInactiveMembers->fetch_assoc()) {
                             ?>
-                                <tr>
-                                    <td><?= $row['firstname'] ?></td>
-                                    <td><?= $row['middlename'] ?></td>
-                                    <td><?= $row['lastname'] ?></td>
-                                    <td class="text-center">
-                                        <?php
+                            <tr>
+                                <td><?= $row['firstname'] ?></td>
+                                <td><?= $row['middlename'] ?></td>
+                                <td><?= $row['lastname'] ?></td>
+                                <td class="text-center">
+                                    <?php
                                         if ($row['status'] == 'active') {
                                         ?>
-                                            <div class="btn btn-sm" id="active-btn"><i class="fa-solid fa-check-circle"></i></div>
-                                        <?php
+                                    <div class="btn btn-sm" id="active-btn"><i class="fa-solid fa-check-circle"></i>
+                                    </div>
+                                    <?php
                                         } else {
                                         ?>
-                                            <div class="btn btn-sm" id="inactive-btn"><i class="fa-solid fa-x"></i></div>
-                                        <?php
+                                    <div class="btn btn-sm" id="inactive-btn"><i class="fa-solid fa-x"></i></div>
+                                    <?php
 
                                         }
                                         ?>
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             <?php
                             }
 
@@ -122,8 +123,6 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
                         </tbody>
                     </table>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -142,7 +141,9 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
                 </div>
                 <div class="card-body">
                     <div class="col mb-3">
-                        <a class="btn btn-success btn" data-toggle="modal" title="Add new admin account (Single Insertion)" data-target="#newUser"><i class="fa-solid fa-plus"></i> New Admin</a>
+                        <a class="btn btn-success btn" data-toggle="modal"
+                            title="Add new admin account (Single Insertion)" data-target="#newUser"><i
+                                class="fa-solid fa-plus"></i> New Admin</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="accTbl" width="100%" cellspacing="0">
@@ -153,8 +154,8 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
                                     <th>Username</th>
                                     <?php if ($_SESSION["type"] == "super_admin") {
                                     ?>
-                                        <th>Password</th>
-                                        <th>Action</th>
+                                    <th>Password</th>
+                                    <th>Action</th>
                                     <?php
                                     } ?>
 
@@ -172,80 +173,113 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
 
                                 while ($row = $resultActiveMembers->fetch_assoc()) {
                                 ?>
-                                    <tr>
-                                        <td><?= $row['id'] ?></td>
-                                        <td><?= $row['email_address'] ?></td>
-                                        <td><?= $row['username'] ?></td>
-                                        <?php if ($_SESSION["type"] == "super_admin") {
+                                <tr>
+                                    <td><?= $row['id'] ?></td>
+                                    <td><?= $row['email_address'] ?></td>
+                                    <td><?= $row['username'] ?></td>
+                                    <?php if ($_SESSION["type"] == "super_admin") {
                                         ?>
-                                            <td><?= $row['password'] ?></td>
-                                            <td>
-                                                <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#updateModal<?= $row['id'] ?>"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <td><?= $row['password'] ?></td>
+                                    <td>
+                                        <a class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target="#updateModal<?= $row['id'] ?>"><i
+                                                class="fa-solid fa-pen-to-square"></i></a>
 
-                                                <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa-solid fa-trash"></i></a>
+                                        <a class="btn btn-danger btn-sm" data-toggle="modal"
+                                            data-target="#deleteModal"><i class="fa-solid fa-trash"></i></a>
 
-                                                <!-- delete admin modal -->
-                                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-lg" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete this user?</h5>
+                                        <!-- delete admin modal -->
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Are you sure you
+                                                            want to delete this user?</h5>
 
-                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
+                                                        <button class="close" type="button" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        <p>Deleting a user also remove it's data from database. Are you
+                                                            sure you want to continue?</p>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-warning btn-sm" type="button"
+                                                            data-dismiss="modal">Cancel</button>
+                                                        <a class="btn btn-danger btn-sm"
+                                                            href="./functions/delete_user.php?id=<?php echo $row['id']; ?>">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end for delete admin modal -->
+
+                                        <!-- modal for updating the user/admin -->
+                                        <div class="modal fade" id="updateModal<?= $row['id'] ?>" tabindex="-1"
+                                            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-sm d-flex align-items-center" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">UPDATE USER</h5>
+                                                        <button class="close" type="button" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form class="user" method="post"
+                                                            action="./functions/update_user.php"
+                                                            enctype="multipart/form-data">
+                                                            <input type="hidden" name="user_id"
+                                                                value="<?= $row['id'] ?>">
+
+                                                            <div class="mb-3">
+                                                                <label for="email" class="form-label">Email
+                                                                    address</label>
+                                                                <input type="email" class="form-control"
+                                                                    value="<?php echo $row['email_address'] ?>"
+                                                                    id="exampleInputEmail1" name="email"
+                                                                    aria-describedby="emailHelp">
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <p>Deleting a user also remove it's data from database. Are you sure you want to continue?</p>
+                                                            <div class="mb-3">
+                                                                <label for="exampleInputPassword1"
+                                                                    class="form-label">Username</label>
+                                                                <input type="text" class="form-control"
+                                                                    value="<?php echo $row['username'] ?>"
+                                                                    name="username" id="exampleInputPassword1">
                                                             </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="password"
+                                                                    class="form-label">Password <small>(Leave blank to randomize password)</small></label>
+                                                                <input type="text" class="form-control"
+                                                                    value="<?php echo $row['password'] ?>"
+                                                                    name="password" id="password">
+                                                            </div>
+ 
 
                                                             <div class="modal-footer">
-                                                                <button class="btn btn-warning btn-sm" type="button" data-dismiss="modal">Cancel</button>
-                                                                <a class="btn btn-danger btn-sm" href="./functions/delete_user.php?id=<?php echo $row['id']; ?>">Delete</a>
+                                                                <button class="btn btn-warning btn-sm" type="button"
+                                                                    data-dismiss="modal">Cancel</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-success">Save Changes</button>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                                <!-- end for delete admin modal -->
-
-                                                <!-- modal for updating the user/admin -->
-                                                <div class="modal fade" id="updateModal<?= $row['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-sm" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">UPDATE USER</h5>
-                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <form class="user" method="post" action="./functions/update_user.php" enctype="multipart/form-data">
-                                                                    <input type="hidden" name="user_id" value="<?= $row['id'] ?>">
-
-                                                                    <div class="mb-3">
-                                                                        <label for="email" class="form-label">Email address</label>
-                                                                        <input type="email" class="form-control" value="<?php echo $row['email_address'] ?>" id="exampleInputEmail1" name="email" aria-describedby="emailHelp">
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="exampleInputPassword1" class="form-label">Username</label>
-                                                                        <input type="text" class="form-control" value="<?php echo $row['username'] ?>" name="username" id="exampleInputPassword1">
-                                                                    </div>
-
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-warning btn-sm" type="button" data-dismiss="modal">Cancel</button>
-                                                                        <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- end for update admin modal -->
-                                            </td>
-                                        <?php } ?>
-                                        </td>
-                                    </tr>
+                                            </div>
+                                        </div>
+                                        <!-- end for update admin modal -->
+                                    </td>
+                                    <?php } ?>
+                                    </td>
+                                </tr>
                                 <?php
                                 }
 
@@ -303,31 +337,32 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
 
                                 while ($row = $resultInactiveMembers->fetch_assoc()) {
                                 ?>
-                                    <tr>
-                                        <td class="text-center"><img src="functions/<?php echo $row['image_path']; ?>" width="150" class="img" alt="Member Image"></td>
-                                        <td><?= $row['event_name'] ?></td>
-                                        <td><?= $row['event_date'] ?></td>
-                                        <td class="text-center">
+                                <tr>
+                                    <td class="text-center"><img src="functions/<?php echo $row['image_path']; ?>"
+                                            width="150" class="img" alt="Member Image"></td>
+                                    <td><?= $row['event_name'] ?></td>
+                                    <td><?= $row['event_date'] ?></td>
+                                    <td class="text-center">
 
-                                            <?php
+                                        <?php
                                             $eventDate = new DateTime($row['event_date']);
                                             $currentDate = new DateTime();
                                             if ($eventDate < $currentDate) {
                                             ?>
-                                                <div class="btn btn-sm" id="active-btn">
-                                                    <i class="fa-solid fa-check-circle" title="Completed Event"></i>
-                                                </div>
-                                            <?php
+                                        <div class="btn btn-sm" id="active-btn">
+                                            <i class="fa-solid fa-check-circle" title="Completed Event"></i>
+                                        </div>
+                                        <?php
                                             } else {
                                             ?>
-                                                <div class="btn btn-sm" id="inactive-btn-event" title="Upcoming Event">
-                                                    <i class="fa-solid fa-calendar" title="Upcoming Event"></i>
-                                                </div>
-                                            <?php
+                                        <div class="btn btn-sm" id="inactive-btn-event" title="Upcoming Event">
+                                            <i class="fa-solid fa-calendar" title="Upcoming Event"></i>
+                                        </div>
+                                        <?php
                                             }
                                             ?>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
 
 
                                 <?php
@@ -367,12 +402,20 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
                 <form action="functions/add_user.php" method="post">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp">
+                        <input type="email" class="form-control" id="exampleInputEmail1" name="email"
+                            aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Username</label>
                         <input type="text" class="form-control" name="username" id="exampleInputPassword1">
                     </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="text" class="form-control" value="" name="password"
+                            id="password">
+                    </div>
+
 
                     <button type="submit" class="btn btn-success">Save</button>
                 </form>
@@ -392,7 +435,7 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
         data: {
             labels: ['Active Members', 'Inactive Members'],
             datasets: [{
-                data: [<?php echo $activeCount; ?>, <?php echo $inactiveCount; ?>],
+                data: [ <?php echo $activeCount; ?> , <?php echo $inactiveCount; ?> ],
                 backgroundColor: ['rgba(0, 100, 0, 1)', 'rgba(255, 0, 0, 1)'],
             }],
         },
@@ -401,12 +444,12 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
 
 <!-- script for datatables -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#accTbl').DataTable();
     });
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#memTbl').DataTable();
     });
 </script>
