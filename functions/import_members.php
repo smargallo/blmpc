@@ -35,12 +35,13 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == 0) {
  
         // Sanitize the data
         $id = sanitize($data[0]);
+        $tin = sanitize($data[10]);
         $mobile_number = sanitize($data[11]);
         $email = sanitize($data[12]);
 
         // Check if a member with the same ID, mobile_number, or email already exists
-        $checkExistingStmt = $conn->prepare("SELECT COUNT(*) FROM members_tbl WHERE id = ? OR mobile_number = ? OR email = ?");
-        $checkExistingStmt->bind_param("sss", $id, $mobile_number, $email);
+        $checkExistingStmt = $conn->prepare("SELECT COUNT(*) FROM members_tbl WHERE id = ? OR mobile_number = ? OR email = ? OR tin = ?");
+        $checkExistingStmt->bind_param("ssss", $id, $mobile_number, $email, $tin);
         $checkExistingStmt->execute();
         $checkExistingStmt->bind_result($count);
         $checkExistingStmt->fetch();
